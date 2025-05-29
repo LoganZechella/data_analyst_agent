@@ -1,0 +1,31 @@
+# Sandbox Server Dependencies
+# FastAPI and server components
+fastapi
+uvicorn[standard]
+
+# Jupyter kernel integration
+jupyter-client
+nest-asyncio
+
+# Data science libraries that executed code will use
+pandas
+numpy
+matplotlib
+seaborn
+scikit-learn
+scipy
+
+# Database connectivity
+sqlalchemy
+pyarrow
+
+# Excel file support
+openpyxl
+xlrd
+
+# Additional useful libraries
+requests
+python-dotenv
+
+# Development and debugging
+ipython
