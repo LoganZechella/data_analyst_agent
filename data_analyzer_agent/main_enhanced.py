@@ -10,7 +10,7 @@ import os
 import json
 import logging
 import asyncio
-from typing import Iterator, Dict, Any, Optional, List
+from typing import Iterator, Dict, Any, Optional, List, AsyncIterator
 from datetime import datetime
 
 from .main_responses_api import DataAnalyzerAgent
@@ -124,7 +124,7 @@ class EnhancedDataAnalyzerAgent(DataAnalyzerAgent):
                                   data: Optional[str] = None,
                                   stream: bool = True,
                                   files: Optional[list] = None,
-                                  database: Optional[str] = None) -> Iterator[Dict[str, Any]]:
+                                  database: Optional[str] = None) -> AsyncIterator[Dict[str, Any]]:
         """
         Enhanced analyze method with database support
         
@@ -208,7 +208,7 @@ class EnhancedDataAnalyzerAgent(DataAnalyzerAgent):
         }
         
         # Use parent's analyze method with enhanced query
-        async for event in super().analyze(
+        for event in super().analyze(
             query=enhanced_query, 
             data=data, 
             stream=stream, 

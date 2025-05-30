@@ -112,16 +112,35 @@ Now analyze the user's request and provide comprehensive insights.
             # Prepare input messages
             input_messages = [
                 {
-                    "type": "text",
-                    "text": f"{self.system_prompt}\n\nUser Request: {query}"
+                    "role": "system",
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": self.system_prompt
+                        }
+                    ]
+                },
+                {
+                    "role": "user", 
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": query
+                        }
+                    ]
                 }
             ]
             
             # Add data if provided
             if data:
                 input_messages.append({
-                    "type": "text", 
-                    "text": f"\nData:\n{data}"
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "input_text", 
+                            "text": f"Data:\n{data}"
+                        }
+                    ]
                 })
             
             # Prepare tools - using native code interpreter
@@ -136,13 +155,14 @@ Now analyze the user's request and provide comprehensive insights.
                 "input": input_messages,
                 "model": self.model,
                 "tools": tools,
-                "modalities": ["text"],
                 "stream": stream
             }
             
             # Add reasoning effort for reasoning models (o4, o1, etc.)
             if self.model.startswith(("o4", "o1")):
-                response_params["reasoning_effort"] = self.reasoning_effort
+                response_params["reasoning"] = {
+                    "effort": "high"
+                }
             
             logger.info(f"Starting analysis with model {self.model}")
             

@@ -60,7 +60,7 @@ class EnhancedDataAnalyzerRunner:
         
         logger.info(f"Enhanced Data Analyzer Runner initialized - Model: {model_type}, Database: {'Enabled' if enable_database else 'Disabled'}")
     
-    def run_analysis(self, query: str, data: str = None, stream: bool = True) -> None:
+    async def run_analysis(self, query: str, data: str = None, stream: bool = True) -> None:
         """
         Run analysis with enhanced capabilities
         
@@ -111,7 +111,7 @@ class EnhancedDataAnalyzerRunner:
                     stream=stream
                 )
             
-            for event in analysis_stream:
+            async for event in analysis_stream:
                 self._display_enhanced_event(event)
                 
                 if event.get("final_response"):
@@ -362,7 +362,7 @@ async def run_enhanced_interactive_mode():
                                 print("⚠️ This example requires database connectivity")
                                 continue
                             print(f"\n🚀 Running example: {example['name']}")
-                            runner.run_analysis(example['query'], example['data'])
+                            await runner.run_analysis(example['query'], example['data'])
                 except (ValueError, KeyboardInterrupt):
                     continue
                 continue
@@ -441,7 +441,7 @@ async def run_enhanced_interactive_mode():
                     data = parts[1].strip()
             
             # Run the analysis
-            runner.run_analysis(user_input, data)
+            await runner.run_analysis(user_input, data)
             print("\n" + "-"*70 + "\n")
             
         except KeyboardInterrupt:
@@ -476,7 +476,7 @@ async def run_enhanced_example_queries():
         print("Query:", example['query'][:100] + "..." if len(example['query']) > 100 else example['query'])
         print("-" * 50)
         
-        runner.run_analysis(example['query'], example['data'])
+        await runner.run_analysis(example['query'], example['data'])
         
         print("✅ Example completed")
         print("\n" + "="*50)
@@ -564,7 +564,7 @@ def main():
                 runner = EnhancedDataAnalyzerRunner("standard", enable_database=db_configured)
                 test_query = "Calculate the sum and average of these numbers: 10, 20, 30, 40, 50"
                 print(f"\n🧪 Quick test: {test_query}")
-                runner.run_analysis(test_query)
+                asyncio.run(runner.run_analysis(test_query))
                 
             elif choice == '5':
                 print("👋 Goodbye!")
