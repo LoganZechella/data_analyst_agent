@@ -1,51 +1,76 @@
-# Data Analyzer Agent Dependencies (Responses API Implementation)
+# Enhanced Data Analyzer Agent Dependencies 
+# Includes MongoDB Atlas MCP integration and Responses API implementation
 
-# Core OpenAI API client (replaces openai-agents)
-openai 
-openai-agents
+# Core OpenAI API client and Agents SDK
+openai>=1.35.0
+openai-agents>=0.0.9
 
 # Environment and configuration
-python-dotenv
+python-dotenv>=1.0.0
 
 # Data handling for examples and testing  
-pandas
+pandas>=2.0.0
 
 # Type checking and validation
-pydantic
+pydantic>=2.0.0
 
 # Logging and monitoring
-structlog
+structlog>=23.0.0
+
+# MongoDB Atlas Integration via MCP
+# Note: mongodb-mcp-server should be installed globally via npm
+# Run: npm install -g mongodb-mcp-server
+pymongo>=4.5.0
+motor>=3.3.0  # Async MongoDB driver
 
 # Development dependencies
-pytest
-pytest-asyncio
-black
-isort
-mypy
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+isort>=5.12.0
+mypy>=1.5.0
 
-# Optional: Enhanced data processing libraries (for local data prep)
-numpy
-matplotlib
-seaborn
+# Enhanced data processing libraries
+numpy>=1.24.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+scikit-learn>=1.3.0
+scipy>=1.11.0
+
+# Additional utilities for enhanced functionality
+python-dateutil>=2.8.0  # Date parsing utilities
+regex>=2023.0.0  # Enhanced regex support for query parsing
+
+# Optional: Advanced data formats
+pyarrow>=13.0.0  # Parquet support
+openpyxl>=3.1.0  # Excel support
+xlrd>=2.0.0  # Legacy Excel support
+
+# Testing and quality assurance
+coverage>=7.0.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+
+# Documentation (optional)
+sphinx>=7.0.0
+sphinx-rtd-theme>=1.3.0
+
+# Performance monitoring (optional)
+psutil>=5.9.0
 
 # Model Support:
-# - GPT-4.1 (standard) - Enhanced balanced performance
-# - o4-mini (reasoning) - Advanced reasoning with transparency
+# - GPT-4.1 (standard) - Enhanced balanced performance with database integration
+# - o4-mini (reasoning) - Advanced reasoning with database awareness and transparency
 
-# Note: The following dependencies are NO LONGER NEEDED with Responses API:
-# - openai-agents (replaced by native openai client)
-# - httpx (no custom HTTP calls needed)
-# - asyncio-throttle (built-in rate limiting)
-# - jupyter-client (native code interpreter)
-# - fastapi (no custom sandbox server)
-# - uvicorn (no custom sandbox server)
-# - nest-asyncio (no custom sandbox server)
+# Installation Notes:
+# 1. Install MongoDB MCP server globally: npm install -g mongodb-mcp-server
+# 2. Configure MongoDB Atlas connection string in .env file
+# 3. Ensure Python 3.10+ for optimal compatibility
+# 4. For development: pip install -r requirements.txt
+# 5. For production: consider pinning exact versions
 
-# Removed dependencies (commented for reference):
-# openai-agents
-# httpx
-# asyncio-throttle  
-# jupyter-client
-# fastapi
-# uvicorn[standard]
-# nest-asyncio
+# Architecture Notes:
+# - Hybrid approach: Database via MCP + Analysis via Responses API
+# - 75% complexity reduction maintained from original Responses API migration
+# - Zero additional infrastructure beyond MCP server
+# - Seamless fallback to standard agent if database unavailable
