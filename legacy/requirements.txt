@@ -1,0 +1,45 @@
+# Data Analyzer Agent Dependencies
+
+# Core OpenAI Agents SDK
+openai-agents
+
+# OpenAI API client
+openai
+
+# HTTP client for sandbox communication
+httpx
+
+# Environment and configuration
+python-dotenv
+
+# Data handling for examples and testing
+pandas
+
+# Async support
+asyncio-throttle
+
+# Logging and monitoring
+structlog
+
+# Optional: LiteLLM for multi-model support
+litellm
+
+# Optional: Langfuse for tracing and monitoring
+# langfuse
+
+# Type checking and validation
+pydantic
+
+# Development dependencies
+pytest
+pytest-asyncio
+black
+isort
+mypy
+
+# Jupyter for development and testing
+jupyter
+ipykernel
+
+# Security and guardrails
+pyyaml  

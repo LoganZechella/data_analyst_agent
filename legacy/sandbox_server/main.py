@@ -9,7 +9,7 @@ and any generated artifacts.
 
 from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel
-from jupyter_client.asynchronous import AsyncKernelManager
+from jupyter_client.asynchronous import AsyncKernelClient
 import asyncio
 import json
 import logging
@@ -20,10 +20,6 @@ import io
 # Configure basic logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
-# Apply nest_asyncio to allow re-entrant asyncio loops, common in Jupyter/FastAPI contexts
-import nest_asyncio
-nest_asyncio.apply()
 
 app = FastAPI(
     title="Data Analyzer Python Sandbox",
@@ -57,11 +53,11 @@ async def execute_code_in_jupyter_kernel(code: str, data_input: str | None) -> d
     Returns:
         Dictionary with execution results including stdout, stderr, errors, and artifacts
     """
-    kernel_manager = AsyncKernelManager()
-    await kernel_manager.start_kernel()
-    client = kernel_manager.client()
+    kernel_client = AsyncKernelClient()
+    await kernel_client.start_kernel()
+    client = kernel_client.client()
     client.start_channels()
-    logger.info(f"Jupyter kernel {kernel_manager.kernel_id} started for code execution.")
+    logger.info(f"Jupyter kernel {kernel_client.kernel_id} started for code execution.")
 
     full_code = code
     if data_input:
@@ -87,7 +83,7 @@ async def execute_code_in_jupyter_kernel(code: str, data_input: str | None) -> d
                 # Wait for a message on iopub channel with a timeout
                 msg = await asyncio.wait_for(client.get_iopub_msg(), timeout=execution_timeout)
             except asyncio.TimeoutError:
-                logger.warning(f"Execution timed out waiting for iopub message from kernel {kernel_manager.kernel_id}.")
+                logger.warning(f"Execution timed out waiting for iopub message from kernel {kernel_client.kernel_id}.")
                 error_info = {"ename": "TimeoutError", "evalue": "Code execution timed out", "traceback": ["Execution exceeded timeout limit."]}
                 break  # Exit loop on timeout
 
@@ -124,11 +120,11 @@ async def execute_code_in_jupyter_kernel(code: str, data_input: str | None) -> d
                 elif msg_type == 'status' and content['execution_state'] == 'idle':
                     # Execution is idle, this usually means completion or an error that halted execution.
                     # We rely on the shell message for definitive status.
-                    logger.info(f"Kernel status idle for {kernel_manager.kernel_id}. Checking shell reply.")
+                    logger.info(f"Kernel status idle for {kernel_client.kernel_id}. Checking shell reply.")
                     break  # Exit iopub loop and check shell reply
 
     except Exception as e:
-        logger.error(f"Exception while processing kernel messages for {kernel_manager.kernel_id}: {str(e)}\\n{traceback.format_exc()}", exc_info=True)
+        logger.error(f"Exception while processing kernel messages for {kernel_client.kernel_id}: {str(e)}\\n{traceback.format_exc()}", exc_info=True)
         if not error_info:  # Ensure some error is reported
              error_info = {"ename": "SandboxError", "evalue": "Error processing kernel messages", "traceback": [str(e)]}
 
@@ -149,11 +145,11 @@ async def execute_code_in_jupyter_kernel(code: str, data_input: str | None) -> d
                  logger.info(f"Execution completed successfully for kernel {kernel_manager.kernel_id}.")
 
     except asyncio.TimeoutError:
-        logger.warning(f"Timeout waiting for shell reply from kernel {kernel_manager.kernel_id}.")
+        logger.warning(f"Timeout waiting for shell reply from kernel {kernel_client.kernel_id}.")
         if not error_info and not stdout_list and not results_list:  # If no output and no error yet
             error_info = {"ename": "TimeoutError", "evalue": "Timeout waiting for shell reply, execution status unknown.", "traceback": []}
     except Exception as e:
-        logger.error(f"Exception while getting shell reply for {kernel_manager.kernel_id}: {str(e)}\\n{traceback.format_exc()}", exc_info=True)
+        logger.error(f"Exception while getting shell reply for {kernel_client.kernel_id}: {str(e)}")
         if not error_info:
             error_info = {"ename": "SandboxShellError", "evalue": "Error getting shell reply", "traceback": [str(e)]}
     finally:

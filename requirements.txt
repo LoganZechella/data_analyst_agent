@@ -1,34 +1,20 @@
-# Data Analyzer Agent Dependencies
+# Data Analyzer Agent Dependencies (Responses API Implementation)
 
-# Core OpenAI Agents SDK
+# Core OpenAI API client (replaces openai-agents)
+openai 
 openai-agents
-
-# OpenAI API client
-openai
-
-# HTTP client for sandbox communication
-httpx
 
 # Environment and configuration
 python-dotenv
 
-# Data handling for examples and testing
+# Data handling for examples and testing  
 pandas
-
-# Async support
-asyncio-throttle
-
-# Logging and monitoring
-structlog
-
-# Optional: LiteLLM for multi-model support
-litellm
-
-# Optional: Langfuse for tracing and monitoring
-# langfuse
 
 # Type checking and validation
 pydantic
+
+# Logging and monitoring
+structlog
 
 # Development dependencies
 pytest
@@ -37,9 +23,29 @@ black
 isort
 mypy
 
-# Jupyter for development and testing
-jupyter
-ipykernel
+# Optional: Enhanced data processing libraries (for local data prep)
+numpy
+matplotlib
+seaborn
 
-# Security and guardrails
-pyyaml  
+# Model Support:
+# - GPT-4.1 (standard) - Enhanced balanced performance
+# - o4-mini (reasoning) - Advanced reasoning with transparency
+
+# Note: The following dependencies are NO LONGER NEEDED with Responses API:
+# - openai-agents (replaced by native openai client)
+# - httpx (no custom HTTP calls needed)
+# - asyncio-throttle (built-in rate limiting)
+# - jupyter-client (native code interpreter)
+# - fastapi (no custom sandbox server)
+# - uvicorn (no custom sandbox server)
+# - nest-asyncio (no custom sandbox server)
+
+# Removed dependencies (commented for reference):
+# openai-agents
+# httpx
+# asyncio-throttle  
+# jupyter-client
+# fastapi
+# uvicorn[standard]
+# nest-asyncio
